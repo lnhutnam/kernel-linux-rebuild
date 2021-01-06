@@ -1,4 +1,4 @@
-# 100 Days of code
+# Kernel Linux Rebuild
 
 <!-- PROJECT SHIELDS -->
 <!--
