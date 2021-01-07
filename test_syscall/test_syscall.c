@@ -10,8 +10,8 @@
 #define pnametoid 436
 #define pidtoname 437
 #else
-#define pnametoid 274
-#define pidtoname 275
+#define pnametoid 436
+#define pidtoname 437
 #endif
 
 int main() {
