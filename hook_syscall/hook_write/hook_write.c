@@ -36,7 +36,6 @@ static asmlinkage int hook_write(unsigned int fildes, const char __user *ubuf, s
 		printk(KERN_INFO "[WRITE HOOK] To file %s.\n", filename);
 	}
 	kfree(kbuf);
-	kfree(filename);
 	return original_syscallwrite(fildes, ubuf, count);
 }
 
