@@ -1,2 +1,2 @@
-/home/lenux/Desktop/hook_syscall/hook/hook.o
+/home/lenux/Desktop/kernel-linux-rebuild/hook_syscall/hook/hook.o
 

@@ -1,1 +1,1 @@
-cmd_/home/lenux/Desktop/hook_syscall/hook/hook.mod := { echo  /home/lenux/Desktop/hook_syscall/hook/hook.o; echo; } > /home/lenux/Desktop/hook_syscall/hook/hook.mod
+cmd_/home/lenux/Desktop/kernel-linux-rebuild/hook_syscall/hook/hook.mod := { echo  /home/lenux/Desktop/kernel-linux-rebuild/hook_syscall/hook/hook.o; echo; } > /home/lenux/Desktop/kernel-linux-rebuild/hook_syscall/hook/hook.mod

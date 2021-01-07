@@ -40,15 +40,16 @@ static asmlinkage int hook_open(const char __user *ufile, int flags, umode_t mod
 
 
 static asmlinkage int hook_write(unsigned int fildes, const char __user *ubuf, size_t count){
-	char *kbuf, *filename;
+	// char *filename;
+	char *kbuf;
 	kbuf   		= kmalloc(256, GFP_KERNEL);
 	copy_from_user(kbuf, ubuf, 256);
-	filename	= d_path(&fcheck_files(current->files, fildes)->f_path, kbuf, 256);
+	// filename	= d_path(&fcheck_files(current->files, fildes)->f_path, kbuf, 256);
 	if (strcmp(current->comm, "dmesg") == 0) {
 		printk(KERN_INFO "[DEBUG HOOK] WRITE HOOKED HERE\n");
  		printk(KERN_INFO "[WRITE HOOK] Process %s.\n", current->comm);
 		printk(KERN_INFO "[WRITE HOOK] Writes %zu bytes\n.", count);
-		printk(KERN_INFO "[WRITE HOOK] To file %s.\n", filename);
+		// printk(KERN_INFO "[WRITE HOOK] To file %s.\n", filename);
 	}
 	kfree(kbuf);
 	return original_syscallwrite(fildes, ubuf, count);
