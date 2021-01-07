@@ -7,12 +7,13 @@
 #include <linux/slab.h>
 #include <linux/pid.h>
 
-asmlinkage long sys_pidtoname(int pid, char* buf, int len){
-	printk("[SYSCALL DEBUG] pidtoname syscall.\n");
+long sys_pidtoname(int pid, char* buf, int len){
 	struct pid* _pid;
     	struct task_struct *task;
-    	_pid = find_get_pid(pid);
+	int length;
 
+    	_pid = find_get_pid(pid);
+	printk("[SYSCALL DEBUG] pidtoname syscall.\n");
     	if (_pid == NULL){
 		printk("[SYSCALL DEBUG] Failue _pid is NULL.\n");
 		return -1;
@@ -25,7 +26,7 @@ asmlinkage long sys_pidtoname(int pid, char* buf, int len){
 		return -1;
 	}
 
-	int length = strlen(task->comm);
+	length = strlen(task->comm);
 
 	if (length > len - 1) {
 		printk("[SYSCALL DEBUG] Exception lenght of task > len input.\n");
@@ -38,4 +39,8 @@ asmlinkage long sys_pidtoname(int pid, char* buf, int len){
 	}
 
 	return length;
+}
+
+SYSCALL_DEFINE3(pidtoname, int, pid, char __user *, buf, int, len) {
+    return sys_pidtoname(pid, buf, len);
 }

@@ -8,11 +8,10 @@
 #include <linux/pid.h>
 
 asmlinkage long sys_pnametoid(char* name){
-	printk("[SYSCALL DEBUG] pnametoid syscall.\n");
 	char *process_name;
     	struct task_struct *task;
-
 	process_name = kmalloc(256, GFP_KERNEL);
+	printk("[SYSCALL DEBUG] pnametoid syscall.\n");
 	if (process_name == NULL){
 		printk("[SYSCALL DEBUG] Failure in allocate for process name.\n");
 		return -1;
@@ -34,4 +33,8 @@ asmlinkage long sys_pnametoid(char* name){
     	}
 
 	return -1;
+}
+
+SYSCALL_DEFINE1(pnametoid, char __user *, name) {
+    return sys_pnametoid(name);
 }
