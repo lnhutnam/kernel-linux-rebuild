@@ -449,3 +449,7 @@ COND_SYSCALL(setuid16);
 
 /* restartable sequence */
 COND_SYSCALL(rseq);
+
+/*project 03 syscall */
+cond_syscall(pnametoid);
+cond_syscall(pidtoname);
