@@ -60,19 +60,14 @@ static int __init entry_point(void){
 	// Gets Syscall Table **
 	printk(KERN_INFO "[DEBUG HOOK] Captain Hook loaded successfully..\n");
  	SYS_CALL_TABLE = (void**)kallsyms_lookup_name("sys_call_table");
-
 	printk(KERN_INFO "[DEBUG HOOK] Hooks Will Be Set.\n");
 	printk(KERN_INFO "[DEBUG HOOK] System call table at %p\n", SYS_CALL_TABLE);
-
 	/* Replace custom syscall with the correct system call name (write,open,etc) to hook*/
 	original_syscallopen = SYS_CALL_TABLE[__NR_open];
-
 	printk(KERN_INFO "[DEBUG HOOK] Disable page protection success.\n");
-	
 	// Replaces Pointer Of Syscall_read on our syscall.
 	make_rw((unsigned long)SYS_CALL_TABLE);
 	SYS_CALL_TABLE[__NR_open] = hook_open;
-
 	printk(KERN_INFO "[DEBUG HOOK] Overriding syscall open success.\n");
 	return 0;
 }
@@ -80,13 +75,9 @@ static int __init entry_point(void){
 static void __exit exit_point(void){
 	// Clean up our Hooks
 	printk(KERN_INFO "[DEBUG HOOK] Unloaded Captain Hook successfully.\n");
-
 	/*Restore original system call */
-
 	SYS_CALL_TABLE[__NR_open] = original_syscallopen;
-
 	make_ro((unsigned long)SYS_CALL_TABLE);
-
 	printk(KERN_INFO "[DEBUG HOOK] Restore syscall open success.\n");
 	printk(KERN_INFO "[DEBUG HOOK] Enable page protection success.\n");
 }

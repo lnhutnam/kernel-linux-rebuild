@@ -1,0 +1,1 @@
+cmd_/home/lenux/Desktop/kernel-linux-rebuild/hook_syscall/hook_open/hook.o := ld -m elf_x86_64  -z max-page-size=0x200000    -r -o /home/lenux/Desktop/kernel-linux-rebuild/hook_syscall/hook_open/hook.o /home/lenux/Desktop/kernel-linux-rebuild/hook_syscall/hook_open/hook_open.o

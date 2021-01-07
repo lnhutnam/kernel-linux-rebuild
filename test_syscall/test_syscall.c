@@ -15,12 +15,12 @@
 #endif
 
 int main() {
-    printf("call pnametoid (%d)\n", pnametoid);
-    printf("pnametoid return %d\n", (int)syscall(pnametoid, (char *)"firefox"));
-    printf("call pidtoname (%d)\n", pidtoname);
+    printf("[DEBUG] Call pnametoid (%d)\n", pnametoid);
+    printf("[DEBUG] Pnametoid return %d\n", (int)syscall(pnametoid, (char *)"firefox"));
+    printf("[DEBUG] Call pidtoname (%d)\n", pidtoname);
     char buf[256];
     buf[0] = '\0';
-    printf("pidtoname return %d\n", (int)syscall(pidtoname, (int)getpid(), (char *)buf, (int)256));
-    printf("process name: %s\n", buf);
+    printf("[DEBUG] Pidtoname return %d\n", (int)syscall(pidtoname, (int)getpid(), (char *)buf, (int)256));
+    printf("[DEBUG] Process name: %s\n", buf);
     return 0;
 }

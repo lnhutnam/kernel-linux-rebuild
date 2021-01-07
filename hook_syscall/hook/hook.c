@@ -22,7 +22,22 @@ MODULE_LICENSE("GPL");
 /*sys_call_table address*/
 static void **SYS_CALL_TABLE;		
 
+static asmlinkage int (*original_syscallopen) (const char __user *, int, umode_t);
 static asmlinkage int (*original_syscallwrite) (unsigned int, const char __user *, size_t);
+
+static asmlinkage int hook_open(const char __user *ufile, int flags, umode_t mode){
+	char *kfile;
+	printk(KERN_INFO "[DEBUG HOOK] OPEN HOOKED HERE.\n");
+	kfile   = kmalloc(256, GFP_KERNEL);
+   	copy_from_user(kfile, ufile, 256);
+	if (strcmp(current->comm, "dmesg") == 0) {
+		printk(KERN_INFO "[OPEN HOOK] Process %s.\n", current->comm);
+		printk(KERN_INFO "[OPEN HOOK] Opens file %s.\n", kfile);
+	}
+	kfree(kfile);
+	return original_syscallopen(ufile, flags, mode);
+}
+
 
 static asmlinkage int hook_write(unsigned int fildes, const char __user *ubuf, size_t count){
 	char *kbuf, *filename;
@@ -38,7 +53,6 @@ static asmlinkage int hook_write(unsigned int fildes, const char __user *ubuf, s
 	kfree(kbuf);
 	return original_syscallwrite(fildes, ubuf, count);
 }
-
 
 // Make writeable 
 static int make_rw(unsigned long address) {
@@ -62,14 +76,23 @@ static int __init entry_point(void){
 	// Gets Syscall Table **
 	printk(KERN_INFO "[DEBUG HOOK] Captain Hook loaded successfully..\n");
  	SYS_CALL_TABLE = (void**)kallsyms_lookup_name("sys_call_table");
+
 	printk(KERN_INFO "[DEBUG HOOK] Hooks Will Be Set.\n");
 	printk(KERN_INFO "[DEBUG HOOK] System call table at %p\n", SYS_CALL_TABLE);
+
 	/* Replace custom syscall with the correct system call name (write,open,etc) to hook*/
+	original_syscallopen = SYS_CALL_TABLE[__NR_open];
 	original_syscallwrite = SYS_CALL_TABLE[__NR_write];
+
 	printk(KERN_INFO "[DEBUG HOOK] Disable page protection success.\n");
+	
 	// Replaces Pointer Of Syscall_read on our syscall.
 	make_rw((unsigned long)SYS_CALL_TABLE);
+	SYS_CALL_TABLE[__NR_open] = hook_open;
 	SYS_CALL_TABLE[__NR_write] = hook_write;
+
+	
+	printk(KERN_INFO "[DEBUG HOOK] Overriding syscall open success.\n");
 	printk(KERN_INFO "[DEBUG HOOK] Overriding syscall write success.\n");
 	return 0;
 }
@@ -77,9 +100,15 @@ static int __init entry_point(void){
 static void __exit exit_point(void){
 	// Clean up our Hooks
 	printk(KERN_INFO "[DEBUG HOOK] Unloaded Captain Hook successfully.\n");
+
 	/*Restore original system call */
+
+	SYS_CALL_TABLE[__NR_open] = original_syscallopen;
 	SYS_CALL_TABLE[__NR_write] = original_syscallwrite;
+
 	make_ro((unsigned long)SYS_CALL_TABLE);
+
+	printk(KERN_INFO "[DEBUG HOOK] Restore syscall open success.\n");
 	printk(KERN_INFO "[DEBUG HOOK] Restore syscall write success.\n");
 	printk(KERN_INFO "[DEBUG HOOK] Enable page protection success.\n");
 }

@@ -1,0 +1,1 @@
+cmd_/home/lenux/Desktop/hook_syscall/hook/hook.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/lenux/Desktop/hook_syscall/hook/hook.ko /home/lenux/Desktop/hook_syscall/hook/hook.o /home/lenux/Desktop/hook_syscall/hook/hook.mod.o;  true
